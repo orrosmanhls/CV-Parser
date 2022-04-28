@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^7.2.1",
     "monday-sdk-js": "0.0.16",
     "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^2.13.216",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0"
