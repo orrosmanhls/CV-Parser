@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import mondaySdk from 'monday-sdk-js';
-const monday = mondaySdk();
+import { parsePDF, createItem } from 'src/utils';
 
 const InputForm: React.FC = () => {
 	const [selectedFile, setSelectedFile] = useState<File | undefined>();
@@ -14,29 +13,11 @@ const InputForm: React.FC = () => {
 
 	const handleSubmission = async () => {
 		if (selectedFile) {
-			const formData = new FormData();
-
-			formData.append('pdfFile', selectedFile);
-
-			const response = await fetch('/extract-text', {
-				method: 'post',
-				body: formData,
-			});
-
-			const data = await response.text();
+			const data = JSON.parse(await parsePDF(selectedFile));
 
 			setData(data);
 
-			const context = await monday.get('context');
-			const boardId = context.data.boardIds[0];
-
-			const createItemResponse = await monday.api(`mutation {
-                            create_item (board_id: ${boardId}, item_name: "A name") {
-                                id
-                            }
-                        }`);
-
-			console.log(createItemResponse);
+			await createItem(data);
 		}
 	};
 
