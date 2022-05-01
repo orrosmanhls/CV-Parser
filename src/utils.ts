@@ -1,6 +1,12 @@
 import mondaySdk from 'monday-sdk-js';
 const monday = mondaySdk();
 
+// board_id
+// data
+// name
+// mail
+// phone
+
 const parsePDF = async (pdf: File): Promise<string> => {
 	const formData = new FormData();
 
@@ -21,11 +27,14 @@ const createItem = async (data: any): Promise<void> => {
 
 	const itemName: string = data.email.split('@')[0];
 
-	// const columnValues = JSON.stringify({ status: 'Done' });
-	console.log(itemName);
+	const emailColumnId = await getColumnIdByName('mail');
+	const phoneColumnId = await getColumnIdByName('phone');
+
+	console.log(phoneColumnId);
+	console.log(data);
 
 	const createItemResponse = await monday.api(`mutation {
-  create_item(board_id: ${boardId}, item_name: ${itemName}, column_values: \"{\\\"text\\\" : \\\"${data.email}\\\"}\") {
+  create_item(board_id: ${boardId}, item_name: ${itemName}, column_values: \"{\\\"${emailColumnId}\\\" : \\\"${data.email}\\\" , \\\"${phoneColumnId}\\\" : \\\"${data.phone}\\\"}\") {
     id
   }
 }
