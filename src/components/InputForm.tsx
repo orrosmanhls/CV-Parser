@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { parsePDF, createItem, haveBeenInInterview } from 'src/utils';
 
 const InputForm: React.FC = () => {
 	const [selectedFile, setSelectedFile] = useState<File | undefined>();
@@ -12,18 +13,15 @@ const InputForm: React.FC = () => {
 
 	const handleSubmission = async () => {
 		if (selectedFile) {
-			const formData = new FormData();
+			const data = JSON.parse(await parsePDF(selectedFile));
 
-			formData.append('pdfFile', selectedFile);
-
-			const response = await fetch('/extract-text', {
-				method: 'post',
-				body: formData,
-			});
-
-			const data = await response.text();
-
-			return setData(data);
+			setData(data);
+			if (await haveBeenInInterview(data.email)) {
+				console.log('exist');
+			} else {
+				await createItem(data);
+				console.log('new item added');
+			}
 		}
 	};
 
