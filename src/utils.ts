@@ -19,13 +19,19 @@ const createItem = async (data: any): Promise<void> => {
 	const context = await monday.get('context');
 	const boardId = context.data.boardIds[0];
 
-	const itemName = data.email.split('@')[0];
+	const itemName: string = data.email.split('@')[0];
+
+	// const columnValues = JSON.stringify({ status: 'Done' });
+	console.log(itemName);
 
 	const createItemResponse = await monday.api(`mutation {
-                            create_item (board_id: ${boardId}, item_name: "${itemName}") {
-                                id
-                            }
-                        }`);
+  create_item(board_id: ${boardId}, item_name: ${itemName}, column_values: \"{\\\"text\\\" : \\\"${data.email}\\\"}\") {
+    id
+  }
+}
+`);
+
+	console.log(createItemResponse);
 };
 
 const getColumnIdByName = async (name: string): Promise<string> => {
