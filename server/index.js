@@ -70,15 +70,23 @@ app.use(cors());
 app.use('/', express.static('../build'));
 app.use(fileUpload());
 
-app.post('/extract-text', (req, res) => {
+app.post('/extract-text', async (req, res) => {
 	if (!req.files && !req.files.pdfFile) {
 		res.status(400);
 		res.end();
 	}
 
-	pdfParse(req.files.pdfFile).then((result) => {
-		res.send(result.text);
-	});
+	const pdfText = (await pdfParse(req.files.pdfFile)).text;
+
+	const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi;
+	const phoneRegex = /\d{3}[-]?\d{7}/;
+
+	const email = pdfText.match(emailRegex)[0];
+	const phone = pdfText.match(phoneRegex)[0];
+
+	console.log(email, phone);
+
+	res.send({ email, phone });
 });
 
 app.listen(8080, () => {
