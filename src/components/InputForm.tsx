@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { parsePDF, createItem, haveBeenInInterview } from 'src/utils';
+import { Button } from 'monday-ui-react-core';
+import DropDown from '../components/DropDown';
 
 const InputForm: React.FC = () => {
 	const [selectedFile, setSelectedFile] = useState<File | undefined>();
@@ -27,22 +29,18 @@ const InputForm: React.FC = () => {
 
 	return (
 		<div>
-			<input type="file" id="inpFile" onChange={changeHandler} />
+			<Button>
+				<input type="file" id="inpFile" onChange={changeHandler} />
+			</Button>
 			<br />
+
+			<DropDown options={[{ label: 'a', value: '1' }]} placeholder="Source" />
 			<br />
-			<textarea
-				style={{ width: '300px', height: '150px' }}
-				id="resultText"
-				placeholder="Your PDF text will appear here..."
-				value={data}
-			></textarea>
+			<DropDown options={[{ label: 'a', value: '1' }]} placeholder="Group" />
+
 			<br />
-			<div>Dropdown - Source of CV</div>
-			<div> Dropdown - Candidate Group</div>
-			<br />
-			<button type="button" id="btnUpload" onClick={handleSubmission}>
-				Upload
-			</button>
+			<Button onClick={handleSubmission}>Upload</Button>
+			{/* <button type="button" id="btnUpload" onClick={handleSubmission}></button> */}
 		</div>
 	);
 };
