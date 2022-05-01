@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 // import mondaySdk from 'monday-sdk-js';
-import Or from './components/Or';
+import InputForm from './components/InputForm';
 
 // const monday = mondaySdk();
 
@@ -9,6 +9,6 @@ const App = () => {
 	// const [settings, setSettings]: JSON = {};
 	// const [name, setName]: String = '';
 
-	return <Or />;
+	return <InputForm />;
 };
 export default App;
