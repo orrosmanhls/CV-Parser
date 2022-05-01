@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import mondaySdk from 'monday-sdk-js';
+const monday = mondaySdk();
 
 const InputForm: React.FC = () => {
 	const [selectedFile, setSelectedFile] = useState<File | undefined>();
@@ -23,7 +25,18 @@ const InputForm: React.FC = () => {
 
 			const data = await response.text();
 
-			return setData(data);
+			setData(data);
+
+			const context = await monday.get('context');
+			const boardId = context.data.boardIds[0];
+
+			const createItemResponse = await monday.api(`mutation {
+                            create_item (board_id: ${boardId}, item_name: "A name") {
+                                id
+                            }
+                        }`);
+
+			console.log(createItemResponse);
 		}
 	};
 
