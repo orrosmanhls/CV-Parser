@@ -94,4 +94,31 @@ const haveBeenInInterview = async (email: string): Promise<boolean> => {
 	return false;
 };
 
-export { parsePDF, createItem, haveBeenInInterview };
+const getStatusColumnValues = async (name: string) => {
+	const context = await monday.get('context');
+	const boardId = context.data.boardIds[0];
+
+	const sourceColumnId = await getColumnIdByName(name);
+
+	const response: any = await monday.api(`query {
+      boards(ids: ${boardId}) {
+      columns (ids: ["${sourceColumnId}"]) {
+        settings_str
+      }
+    }
+  }`);
+
+	const labelsObject = JSON.parse(
+		response.data.boards[0].columns[0].settings_str
+	).labels;
+
+	const labelsArray: { label: unknown; value: unknown }[] = Object.values(
+		labelsObject
+	).map((label) => {
+		return { label: label === '' ? 'Default' : label, value: label };
+	});
+
+	return labelsArray;
+};
+
+export { parsePDF, createItem, haveBeenInInterview, getStatusColumnValues };

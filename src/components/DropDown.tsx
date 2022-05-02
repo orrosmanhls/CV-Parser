@@ -2,10 +2,7 @@ import React from 'react';
 import { Dropdown } from 'monday-ui-react-core';
 
 type DropDownProps = {
-	options: {
-		label: string;
-		value: string;
-	}[];
+	labels: { label: unknown; value: unknown }[] | null;
 	placeholder: string;
 };
 
@@ -27,20 +24,7 @@ const DropDown = (props: DropDownProps) => {
 				onMenuClose={function noRefCheck() {}}
 				onOptionSelect={function noRefCheck() {}}
 				openMenuOnFocus={function noRefCheck() {}}
-				options={[
-					{
-						label: 'Option 1',
-						value: 1,
-					},
-					{
-						label: 'Option 2',
-						value: 2,
-					},
-					{
-						label: 'Option 3',
-						value: 3,
-					},
-				]}
+				options={props.labels}
 				placeholder={props.placeholder}
 			/>
 		</div>

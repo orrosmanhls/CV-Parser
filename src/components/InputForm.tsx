@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import { parsePDF, createItem, haveBeenInInterview } from 'src/utils';
+import React, { useState, useEffect } from 'react';
+import {
+	parsePDF,
+	createItem,
+	haveBeenInInterview,
+	getStatusColumnValues,
+} from 'src/utils';
 import { Button } from 'monday-ui-react-core';
 import DropDown from '../components/DropDown';
 
 const InputForm: React.FC = () => {
 	const [selectedFile, setSelectedFile] = useState<File | undefined>();
 	const [data, setData] = useState<any>('');
+	const [sourceLabels, setSourceLabels] =
+		useState<{ label: unknown; value: unknown }[]>();
 
 	const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
@@ -21,11 +28,21 @@ const InputForm: React.FC = () => {
 			if (await haveBeenInInterview(data.email)) {
 				console.log('exist');
 			} else {
+				// console.log(await getStatusColumnValues('source'));
+
 				await createItem(data);
 				console.log('new item added');
 			}
 		}
 	};
+
+	useEffect(() => {
+		(async () => {
+			const labels = await getStatusColumnValues('source');
+			setSourceLabels(labels);
+			console.log(labels);
+		})();
+	}, []);
 
 	return (
 		<div>
@@ -34,9 +51,12 @@ const InputForm: React.FC = () => {
 			</Button>
 			<br />
 
-			<DropDown options={[{ label: 'a', value: '1' }]} placeholder="Source" />
+			<DropDown
+				labels={sourceLabels ? sourceLabels : null}
+				placeholder="Source"
+			/>
 			<br />
-			<DropDown options={[{ label: 'a', value: '1' }]} placeholder="Group" />
+			<DropDown labels={[]} placeholder="Group" />
 
 			<br />
 			<Button onClick={handleSubmission}>Upload</Button>
