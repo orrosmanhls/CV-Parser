@@ -11,20 +11,12 @@ const DropDown = (props: DropDownProps) => {
 	return (
 		<div
 			style={{
-				height: '150px',
 				width: '300px',
 			}}
 		>
 			<Dropdown
 				className="dropdown-stories-styles_spacing"
-				onBlur={function noRefCheck() {}}
 				onChange={props.onChange}
-				onClear={function noRefCheck() {}}
-				onFocus={function noRefCheck() {}}
-				onInputChange={function noRefCheck() {}}
-				onMenuClose={function noRefCheck() {}}
-				onOptionSelect={function noRefCheck() {}}
-				openMenuOnFocus={function noRefCheck() {}}
 				options={props.labels}
 				placeholder={props.placeholder}
 			/>

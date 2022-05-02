@@ -14,6 +14,7 @@ const InputForm: React.FC = () => {
 	const [sourceLabels, setSourceLabels] =
 		useState<{ label: unknown; value: unknown }[]>();
 	const [source, setSource] = useState<string>('');
+	const [wasAdded, setWasAdded] = useState<boolean | null>(null);
 
 	const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
@@ -23,14 +24,18 @@ const InputForm: React.FC = () => {
 
 	const handleSubmission = async () => {
 		if (selectedFile) {
+			console.log(selectedFile);
+
 			const data = JSON.parse(await parsePDF(selectedFile));
 
 			setData(data);
 			if (await haveBeenInInterview(data.email)) {
 				console.log('exist');
+				setWasAdded(false);
 			} else {
 				await createItem(data, source);
 				console.log('new item added');
+				setWasAdded(true);
 			}
 		}
 	};
@@ -46,24 +51,63 @@ const InputForm: React.FC = () => {
 		})();
 	}, []);
 
+	useEffect(() => {}, [wasAdded]);
+
+	console.log(Button);
+
 	return (
-		<div>
-			<Button>
-				<input type="file" id="inpFile" onChange={changeHandler} />
-			</Button>
-			<br />
+		<div className="input-form">
+			{!selectedFile ? (
+				<div className="file-input">
+					<div className="description">
+						<p>
+							<strong>Add CV file (.pdf)</strong>
+						</p>
+						<p>We'll add a new candidate to the board for you</p>
+					</div>
+					<Button>
+						<label className="custom-file-upload">
+							<input
+								type="file"
+								id="inpFile"
+								onChange={changeHandler}
+								style={{ display: 'none' }}
+							/>
+							+ Add File
+						</label>
+					</Button>
+				</div>
+			) : null}
 
-			<DropDown
-				labels={sourceLabels ? sourceLabels : null}
-				placeholder="Source"
-				onChange={handleSelect}
-			/>
-			<br />
 			{/* <DropDown labels={[]} placeholder="Group" /> */}
-
-			<br />
-
-			<Button onClick={handleSubmission}>Upload</Button>
+			{selectedFile ? (
+				<div className="upload-area">
+					<label className="custom-file-upload" style={{ cursor: 'pointer' }}>
+						<input
+							type="file"
+							id="inpFile"
+							onChange={changeHandler}
+							style={{ display: 'none' }}
+						/>
+						{selectedFile.name}
+					</label>
+					<DropDown
+						labels={sourceLabels ? sourceLabels : null}
+						placeholder="Source"
+						onChange={handleSelect}
+					/>
+					{selectedFile && source ? (
+						<Button onClick={handleSubmission}>Upload</Button>
+					) : (
+						<Button disabled="true">Upload</Button>
+					)}
+					{wasAdded !== null && !wasAdded ? (
+						<div>The candidate already exists</div>
+					) : wasAdded ? (
+						<div>New candidate was added!</div>
+					) : null}
+				</div>
+			) : null}
 		</div>
 	);
 };
