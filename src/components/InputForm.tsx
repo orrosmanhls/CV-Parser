@@ -13,6 +13,7 @@ const InputForm: React.FC = () => {
 	const [data, setData] = useState<any>('');
 	const [sourceLabels, setSourceLabels] =
 		useState<{ label: unknown; value: unknown }[]>();
+	const [source, setSource] = useState<string>('');
 
 	const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
@@ -28,19 +29,20 @@ const InputForm: React.FC = () => {
 			if (await haveBeenInInterview(data.email)) {
 				console.log('exist');
 			} else {
-				// console.log(await getStatusColumnValues('source'));
-
-				await createItem(data);
+				await createItem(data, source);
 				console.log('new item added');
 			}
 		}
+	};
+
+	const handleSelect = (source: { label: string; value: string }) => {
+		setSource(() => source.value);
 	};
 
 	useEffect(() => {
 		(async () => {
 			const labels = await getStatusColumnValues('source');
 			setSourceLabels(labels);
-			console.log(labels);
 		})();
 	}, []);
 
@@ -54,13 +56,14 @@ const InputForm: React.FC = () => {
 			<DropDown
 				labels={sourceLabels ? sourceLabels : null}
 				placeholder="Source"
+				onChange={handleSelect}
 			/>
 			<br />
-			<DropDown labels={[]} placeholder="Group" />
+			{/* <DropDown labels={[]} placeholder="Group" /> */}
 
 			<br />
+
 			<Button onClick={handleSubmission}>Upload</Button>
-			{/* <button type="button" id="btnUpload" onClick={handleSubmission}></button> */}
 		</div>
 	);
 };

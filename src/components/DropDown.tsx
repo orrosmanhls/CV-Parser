@@ -4,6 +4,7 @@ import { Dropdown } from 'monday-ui-react-core';
 type DropDownProps = {
 	labels: { label: unknown; value: unknown }[] | null;
 	placeholder: string;
+	onChange: Function;
 };
 
 const DropDown = (props: DropDownProps) => {
@@ -17,7 +18,7 @@ const DropDown = (props: DropDownProps) => {
 			<Dropdown
 				className="dropdown-stories-styles_spacing"
 				onBlur={function noRefCheck() {}}
-				onChange={function noRefCheck() {}}
+				onChange={props.onChange}
 				onClear={function noRefCheck() {}}
 				onFocus={function noRefCheck() {}}
 				onInputChange={function noRefCheck() {}}

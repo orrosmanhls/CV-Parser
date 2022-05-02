@@ -21,7 +21,7 @@ const parsePDF = async (pdf: File): Promise<string> => {
 	return data;
 };
 
-const createItem = async (data: any): Promise<void> => {
+const createItem = async (data: any, source: string): Promise<void> => {
 	const context = await monday.get('context');
 	const boardId = context.data.boardIds[0];
 
@@ -29,12 +29,10 @@ const createItem = async (data: any): Promise<void> => {
 
 	const emailColumnId = await getColumnIdByName('mail');
 	const phoneColumnId = await getColumnIdByName('phone');
-
-	console.log(phoneColumnId);
-	console.log(data);
+	const sourceColumnId = await getColumnIdByName('source');
 
 	const createItemResponse = await monday.api(`mutation {
-  create_item(board_id: ${boardId}, item_name: ${itemName}, column_values: \"{\\\"${emailColumnId}\\\" : \\\"${data.email}\\\" , \\\"${phoneColumnId}\\\" : \\\"${data.phone}\\\"}\") {
+  create_item(board_id: ${boardId}, item_name: ${itemName}, column_values: \"{\\\"${emailColumnId}\\\" : \\\"${data.email}\\\" , \\\"${phoneColumnId}\\\" : \\\"${data.phone}\\\" , \\\"${sourceColumnId}\\\" : \\\"${source}\\\"}\" ) {
     id
   }
 }
